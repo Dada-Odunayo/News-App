@@ -3,12 +3,10 @@ package com.example.newsapplication.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.newsapplication.model.Source
-import java.time.LocalDateTime
 import java.util.UUID
 
 
-@Entity(tableName = "articles")
+@Entity(tableName = "article")
 data class NewsEntity(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     val title: String,

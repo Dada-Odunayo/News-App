@@ -77,7 +77,6 @@ class NewsViewModel @Inject constructor(
                 is DataSource.Success -> {
                     _newsArticles.value += articleDataSource.data
                     currentOffset += articleDataSource.data.size
-                    Log.d("current offset","count $currentOffset")
                     _uiState.value = _uiState.value.copy(
                         fromNetwork = articleDataSource.fromNetwork
                     )
@@ -97,8 +96,12 @@ class NewsViewModel @Inject constructor(
                 it.url == url
             }
         )
-        Log.d("selected article","${_uiState.value.selectedArticle}")
+    }
 
+    fun cacheArticles(){
+        viewModelScope.launch {
+            newsRepository.cacheArticles(_uiState.value.selectedArticle)
+        }
     }
 
 

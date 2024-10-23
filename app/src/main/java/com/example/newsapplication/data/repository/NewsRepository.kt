@@ -8,6 +8,7 @@ import com.example.newsapplication.data.database.NewsEntity
 import com.example.newsapplication.model.Article
 
 import javax.inject.Inject
+import kotlin.collections.map
 
 class NewsRepository @Inject constructor(
     private val newsAPIService: NewsAPIService,
@@ -21,22 +22,6 @@ class NewsRepository @Inject constructor(
 
             if (response.isSuccessful) {
                 response.body()?.articles?.let { articles ->
-                    // Convert the API response to NewsEntity for caching
-                    Log.d("articles", "result: $articles")
-                    val newsEntities = articles.map { article ->
-                        NewsEntity(
-                            title = article.title,
-                            description = article.description,
-                            url = article.url,
-                            urlToImage = article.urlToImage,
-                            publishedAt = article.publishedAt,
-                            content = article.content,
-                            author = article.author,
-                        )
-                    }
-                    // Cache the articles in Room database
-                    articleDao.insertArticles(newsEntities)
-
                     DataSource.Success(articles, fromNetwork = true)
                 } ?: run {
                     // Return cached articles if the response body is null
@@ -73,6 +58,22 @@ class NewsRepository @Inject constructor(
             DataSource.Error(e.localizedMessage ?: "An error occurred")
         }
 
+    }
+
+    suspend fun cacheArticles(article: Article?){
+        val newsEntities = listOf<NewsEntity>(
+            NewsEntity(
+                title = article?.title.toString(),
+                description = article?.description,
+                url = article?.url.toString(),
+                urlToImage = article?.urlToImage,
+                publishedAt = article?.publishedAt.toString(),
+                content = article?.content,
+                author = article?.author,
+            ))
+
+        // Cache the articles in Room database
+        articleDao.insertArticles(newsEntities)
     }
 
     private fun NewsEntity.toArticle(): Article {

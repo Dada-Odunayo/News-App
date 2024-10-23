@@ -10,6 +10,6 @@ interface NewsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertArticles(articles: List<NewsEntity>)
 
-    @Query("SELECT * FROM articles LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM article LIMIT :limit OFFSET :offset")
     suspend fun getAllArticles(offset: Int, limit: Int): List<NewsEntity>
 }

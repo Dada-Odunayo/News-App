@@ -180,6 +180,7 @@ fun HomeScreen(
                     items(articles) { article ->
                         NewsItem(article) {
                             viewModel.updateSelectedArticle(article.url)
+                            viewModel.cacheArticles()
                             navController.navigate(NewsNavigation.NewsDetailsScreen.route)
                         }
                         Spacer(Modifier.height(15.dp))
